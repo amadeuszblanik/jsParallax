@@ -10,9 +10,15 @@ class JsParallax {
         let isInView = (selector.getBoundingClientRect().top <= window.innerHeight && selector.getBoundingClientRect().bottom >= 0);
         if (isInView) {
             let valueCurr = ((selector.getBoundingClientRect().bottom / (selector.offsetTop + selector.clientHeight))).toFixed(2);
+            let valueCurrWindow = (window.scrollY / window.innerHeight).toFixed(2);
             let style = "";
             for (let value of element.values) {
-                let valueToSet = valueCurr * value.to;
+                let valueToSet = false;
+                if (value.type == "window") {
+                    valueToSet = valueCurrWindow * value.to;
+                } else {
+                    valueToSet = valueCurr * value.to;
+                }
                 if (valueToSet < value.from) {
                     valueToSet = value.from;
                 } else if (valueToSet > value.to) {
@@ -42,13 +48,14 @@ new JsParallax([
         values: [{
             name: "xyz",
             from: 0,
-            to: 90,
+            to: 180,
             unit: "deg"
         }, {
             name: "x",
+            type: "window",
             from: 0,
-            to: 90,
-            unit: "deg"
+            to: 50,
+            unit: "vw"
         }]
     }
 ]).mount();

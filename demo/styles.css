@@ -1,11 +1,18 @@
-html {
+html body {
+    display: flex;
+    justify-content: center;
     min-height: 300vh;
 }
 
 .box {
+    position: relative;
+    left: var(--x);
     display: block;
     width: 128px;
     height: 128px;
+    margin-top: calc(50vh - 64px);
     background: #a00;
     transform: rotate(var(--xyz));
+    transform-origin: center center;
+    transition: all 150ms linear;
 }
