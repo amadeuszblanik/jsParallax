@@ -1,6 +1,6 @@
 # jsParallax
 ---
-INDEV 20190512
+INDEV-20190512
 
 ```
 new JsParallax([
