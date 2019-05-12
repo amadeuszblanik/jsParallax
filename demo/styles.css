@@ -1,0 +1,11 @@
+html {
+    min-height: 300vh;
+}
+
+.box {
+    display: block;
+    width: 128px;
+    height: 128px;
+    background: #a00;
+    transform: rotate(var(--xyz));
+}
