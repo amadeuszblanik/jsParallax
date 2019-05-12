@@ -7,6 +7,25 @@
 </head>
 <body>
     <div class="box"></div>
-<script src="./../src/jsParallax.js"></script>
+<script src="./../dist/jsParallax.js"></script>
+<script>
+    new JsParallax([
+        {
+            selector: ".box",
+            values: [{
+                name: "xyz",
+                from: 0,
+                to: 180,
+                unit: "deg"
+            }, {
+                name: "x",
+                type: "window",
+                from: 0,
+                to: 50,
+                unit: "vw"
+            }]
+        }
+    ]).mount();
+</script>
 </body>
 </html>
