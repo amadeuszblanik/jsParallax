@@ -35,14 +35,13 @@ function () {
         if (typeof selector.getBoundingClientRect === "function") {
           isInView = selector.getBoundingClientRect().top <= window.innerHeight && selector.getBoundingClientRect().bottom >= 0;
         } else {
-          console.log("Selector doesn't have getBoundingClientRect()", {
+          console.log({
             selector: selector
           });
         }
 
         if (isInView) {
-          var valueCurr = (selector.getBoundingClientRect().bottom / (selector.offsetTop + selector.clientHeight)).toFixed(2);
-          var valueCurrWindow = (window.scrollY / window.innerHeight).toFixed(2);
+          var valueCurr = false;
           var style = "";
           var _iteratorNormalCompletion = true;
           var _didIteratorError = false;
@@ -51,20 +50,26 @@ function () {
           try {
             for (var _iterator = element.values[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
               var value = _step.value;
-              var valueToSet = false;
 
               if (value.type == "window") {
-                valueToSet = valueCurrWindow * value.to;
+                valueCurr = (window.scrollY / window.innerHeight).toFixed(2);
               } else {
-                valueToSet = valueCurr * value.to;
+                valueCurr = (selector.getBoundingClientRect().bottom / (selector.offsetTop + selector.clientHeight)).toFixed(2);
               }
 
-              if (valueToSet < value.from) {
-                valueToSet = value.from;
-              } else if (valueToSet > value.to) {
-                valueToSet = value.to;
+              var valueToSet = false;
+              var difference = false;
+
+              if (value.to > value.from) {
+                difference = value.to - value.from;
+                valueToSet = value.from + difference * valueCurr;
+              } else {
+                difference = value.from - value.to;
+                valueToSet = value.from - difference * valueCurr;
               }
 
+              valueToSet = valueToSet > value.to ? value.to : valueToSet;
+              valueToSet = valueToSet < value.from ? value.from : valueToSet;
               style += "--" + value.name + ": " + valueToSet + value.unit + ";";
             }
           } catch (err) {

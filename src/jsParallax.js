@@ -15,21 +15,25 @@ export default class JsParallax {
                 console.log({selector});
             }
             if (isInView) {
-                let valueCurr = ((selector.getBoundingClientRect().bottom / (selector.offsetTop + selector.clientHeight))).toFixed(2);
-                let valueCurrWindow = (window.scrollY / window.innerHeight).toFixed(2);
+                let valueCurr = false;
                 let style = "";
                 for (let value of element.values) {
-                    let valueToSet = false;
                     if (value.type == "window") {
-                        valueToSet = valueCurrWindow * value.to;
+                        valueCurr = (window.scrollY / window.innerHeight).toFixed(2);
                     } else {
-                        valueToSet = valueCurr * value.to;
+                        valueCurr = ((selector.getBoundingClientRect().bottom / (selector.offsetTop + selector.clientHeight))).toFixed(2);
                     }
-                    if (valueToSet < value.from) {
-                        valueToSet = value.from;
-                    } else if (valueToSet > value.to) {
-                        valueToSet = value.to;
+                    let valueToSet = false;
+                    let difference = false;
+                    if (value.to > value.from) {
+                        difference = value.to - value.from;
+                        valueToSet = value.from + difference * valueCurr;
+                    } else {
+                        difference = value.from - value.to;
+                        valueToSet = value.from - difference * valueCurr;
                     }
+                    valueToSet = valueToSet > value.to ? value.to : valueToSet;
+                    valueToSet = valueToSet < value.from ? value.from : valueToSet;
                     style += "--" + value.name + ": " + valueToSet + value.unit + ";";
                 }
                 selector.style = style;
@@ -40,7 +44,7 @@ export default class JsParallax {
     }
 
     mount() {
-        for(let element of this.state.data) {
+        for (let element of this.state.data) {
             if (typeof window === "object") {
                 this.makeMovement(element);
                 window.addEventListener("scroll", event => this.makeMovement(element));
