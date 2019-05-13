@@ -1,0 +1,32 @@
+{
+  "name": "js-parallax",
+  "version": "0.1.2",
+  "description": "indev-state",
+  "author": "Amadeusz Blanik <amadeusz@blanik.me> (https://blanik.me)",
+  "main": "dist/jsParallax.js",
+  "scripts": {
+    "build": "gulp",
+    "prod": "gulp prod"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amadeuszblanik/jsParallax.git"
+  },
+  "keywords": [
+    "parallax",
+    "simple",
+    "css variables"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amadeuszblanik/jsParallax/issues"
+  },
+  "homepage": "https://github.com/amadeuszblanik/jsParallax#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "@babel/core": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0"
+  }
+}

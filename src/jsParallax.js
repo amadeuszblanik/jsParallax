@@ -1,4 +1,4 @@
-class JsParallax {
+export default class JsParallax {
     constructor(elements) {
         this.state = {
             data: elements
@@ -6,9 +6,14 @@ class JsParallax {
     }
 
     makeMovement(element) {
-        const selector = document.querySelector(element.selector);
+        const selector = typeof element.selector === "object" ? element.selector.current : document.querySelector(element.selector);
         if (typeof selector === "object") {
-            let isInView = (selector.getBoundingClientRect().top <= window.innerHeight && selector.getBoundingClientRect().bottom >= 0);
+            let isInView = false;
+            if (typeof selector.getBoundingClientRect === "function") {
+                isInView = (selector.getBoundingClientRect().top <= window.innerHeight && selector.getBoundingClientRect().bottom >= 0);
+            } else {
+                console.log({selector});
+            }
             if (isInView) {
                 let valueCurr = ((selector.getBoundingClientRect().bottom / (selector.offsetTop + selector.clientHeight))).toFixed(2);
                 let valueCurrWindow = (window.scrollY / window.innerHeight).toFixed(2);
