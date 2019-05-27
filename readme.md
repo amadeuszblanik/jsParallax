@@ -1,6 +1,8 @@
 # js-parallax
 ---
-INDEV-20190513 (React-Ready)
+0.2.0-pre2 (React-Ready)
+
+Demo: https://blanik.me/projects/js-parallax
 
 ## Install
 `yarn add js-parallax` or `npm add js-parallax`

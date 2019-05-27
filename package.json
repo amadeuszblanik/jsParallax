@@ -1,7 +1,7 @@
 {
   "name": "js-parallax",
-  "version": "0.2.0-pre1",
-  "description": "indev-state",
+  "version": "0.2.0-pre2",
+  "description": "CSS Variables Parallax - React-ready - JavaScripts",
   "author": "Amadeusz Blanik <amadeusz@blanik.me> (https://blanik.me)",
   "main": "dist/jsParallax.js",
   "scripts": {
@@ -22,11 +22,12 @@
     "url": "https://github.com/amadeuszblanik/jsParallax/issues"
   },
   "homepage": "https://github.com/amadeuszblanik/jsParallax#readme",
-  "devDependencies": {},
-  "dependencies": {
+  "devDependencies": {
     "@babel/core": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0"
+  },
+  "dependencies": {
   }
 }
