@@ -51,7 +51,7 @@ new JsParallax([
             }
             ]
         }
-    ]).mount();
+    ], {react: true/false}, {decimals: 0}).mount();
 ```
 
 ```css

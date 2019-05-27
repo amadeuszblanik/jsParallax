@@ -1,6 +1,6 @@
 {
   "name": "js-parallax",
-  "version": "0.2.0-pre2",
+  "version": "0.2.0-pre3",
   "description": "CSS Variables Parallax - React-ready - JavaScripts",
   "author": "Amadeusz Blanik <amadeusz@blanik.me> (https://blanik.me)",
   "main": "dist/jsParallax.js",

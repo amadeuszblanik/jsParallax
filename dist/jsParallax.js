@@ -17,12 +17,13 @@ var JsParallax =
 /*#__PURE__*/
 function () {
   function JsParallax(elements) {
-    var decimals = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+    var react = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    var decimals = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
 
     _classCallCheck(this, JsParallax);
 
     this.state = {
-      react: (typeof React === "undefined" ? "undefined" : _typeof(React)) === "object",
+      react: react,
       data: elements,
       decimals: decimals
     };
@@ -50,6 +51,7 @@ function () {
           console.error("Can't query selector \"".concat(selector, "\" in your document"));
           return false;
         } else {
+          console.log("!");
           return element;
         }
       } else if (_typeof(selector) === "object") {
@@ -60,7 +62,8 @@ function () {
             });
             return false;
           } else {
-            if (!React.isValidElement(selector)) {
+            if (true == false) {
+              //@todo: Better React support
               console.error("Provided element is not valid React element", {
                 selector: selector
               });
@@ -71,11 +74,13 @@ function () {
                 });
                 return false;
               } else {
+                console.log("!!!");
                 return selector.current;
               }
             }
           }
         } else {
+          console.log("!!");
           return selector;
         }
 
@@ -197,7 +202,16 @@ function () {
         }
       }
 
-      element.style = style;
+      console.log({
+        element: element
+      });
+
+      if (element === false) {
+        console.warn("Unexpected error has occurred");
+        return false;
+      } else {
+        element.style = style;
+      }
     }
   }, {
     key: "updateMouse",
@@ -211,6 +225,8 @@ function () {
     key: "mount",
     value: function mount() {
       var _this = this;
+
+      console.log(this.state.data, this.state.react);
 
       if ((typeof window === "undefined" ? "undefined" : _typeof(window)) !== "object") {
         console.warn("This library works only in Client-Side Rendered JavaScripts.");
