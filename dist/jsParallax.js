@@ -17,122 +17,241 @@ var JsParallax =
 /*#__PURE__*/
 function () {
   function JsParallax(elements) {
+    var decimals = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
+
     _classCallCheck(this, JsParallax);
 
     this.state = {
-      data: elements
+      react: (typeof React === "undefined" ? "undefined" : _typeof(React)) === "object",
+      data: elements,
+      decimals: decimals
+    };
+    this.mouse = {
+      x: 0,
+      y: 0
     };
   }
 
   _createClass(JsParallax, [{
-    key: "makeMovement",
-    value: function makeMovement(element) {
-      var selector = _typeof(element.selector) === "object" ? element.selector.current : document.querySelector(element.selector);
+    key: "isInView",
+    value: function isInView(selector) {
+      return selector.getBoundingClientRect().top <= window.innerHeight && selector.getBoundingClientRect().bottom >= 0;
+    }
+  }, {
+    key: "querySelector",
+    value: function querySelector(selector) {
+      if (typeof selector === "string") {
+        var element = document.querySelector(selector);
 
-      if (_typeof(selector) === "object") {
-        var isInView = false;
-
-        if (typeof selector.getBoundingClientRect === "function") {
-          isInView = selector.getBoundingClientRect().top <= window.innerHeight && selector.getBoundingClientRect().bottom >= 0;
+        if (_typeof(element) !== "object") {
+          console.error("Can't query selector \"".concat(selector, "\" in your document"));
+          return false;
+        } else if (element === null) {
+          console.error("Can't query selector \"".concat(selector, "\" in your document"));
+          return false;
         } else {
-          console.log({
-            selector: selector
-          });
+          return element;
         }
-
-        if (isInView) {
-          var valueCurr = false;
-          var style = "";
-          var _iteratorNormalCompletion = true;
-          var _didIteratorError = false;
-          var _iteratorError = undefined;
-
-          try {
-            for (var _iterator = element.values[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-              var value = _step.value;
-
-              if (value.type == "window") {
-                valueCurr = (window.scrollY / window.innerHeight).toFixed(2);
+      } else if (_typeof(selector) === "object") {
+        if (!(selector instanceof HTMLElement)) {
+          if (!this.state.react) {
+            console.error("Provided element didn't exists in DOM", {
+              selector: selector
+            });
+            return false;
+          } else {
+            if (!React.isValidElement(selector)) {
+              console.error("Provided element is not valid React element", {
+                selector: selector
+              });
+            } else {
+              if (_typeof(selector.current) !== "object") {
+                console.error("Provided element.current is not valid React element", {
+                  selector: selector
+                });
+                return false;
               } else {
-                valueCurr = (selector.getBoundingClientRect().bottom / (selector.offsetTop + selector.clientHeight)).toFixed(2);
-              }
-
-              var valueToSet = false;
-              var difference = false;
-
-              if (value.to > value.from) {
-                difference = value.to - value.from;
-                valueToSet = value.from + difference * valueCurr;
-              } else {
-                difference = value.from - value.to;
-                valueToSet = value.from - difference * valueCurr;
-              }
-
-              valueToSet = valueToSet > value.to ? value.to : valueToSet;
-              valueToSet = valueToSet < value.from ? value.from : valueToSet;
-              style += "--" + value.name + ": " + valueToSet + value.unit + ";";
-            }
-          } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion && _iterator["return"] != null) {
-                _iterator["return"]();
-              }
-            } finally {
-              if (_didIteratorError) {
-                throw _iteratorError;
+                return selector.current;
               }
             }
           }
-
-          selector.style = style;
+        } else {
+          return selector;
         }
+
+        console.error("Unexpected error has occured");
+        return false;
       } else {
-        console.warn("Selector is not an object", {
-          selector: selector
-        });
+        console.error("Selector must be defined as DOM Element, React ref or selector");
+        return false;
       }
+
+      console.error("Unexpected error has occured");
+      return false;
+    }
+  }, {
+    key: "calcDifference",
+    value: function calcDifference(from, to, multiplier) {
+      if (to == from) {
+        return to;
+      } else {
+        return from + (to - from) * multiplier;
+      }
+    }
+  }, {
+    key: "makeWindow",
+    value: function makeWindow(from, to) {
+      var multipler = window.scrollY / (document.body.clientHeight - window.innerHeight);
+      var response = parseFloat(this.calcDifference(from, to, multipler)).toFixed(this.state.decimals);
+
+      if (from < to) {
+        if (response > to) {
+          return to;
+        } else if (response < from) {
+          return from;
+        } else {
+          return response;
+        }
+      } else if (from > to) {
+        if (response < to) {
+          return to;
+        } else if (response > from) {
+          return from;
+        } else {
+          return response;
+        }
+      }
+
+      console.error("Unexpected error has occured!");
+      return false;
+    }
+  }, {
+    key: "makeScroll",
+    value: function makeScroll(from, to, multipler, element) {
+      if (!this.isInView(element)) {
+        return false;
+      } else {
+        var response = parseFloat(this.calcDifference(from, to, multipler)).toFixed(this.state.decimals);
+
+        if (from < to) {
+          if (response > to) {
+            return to;
+          } else if (response < from) {
+            return from;
+          } else {
+            return response;
+          }
+        } else if (from > to) {
+          if (response < to) {
+            return to;
+          } else if (response > from) {
+            return from;
+          } else {
+            return response;
+          }
+        }
+
+        console.error("Unexpected error has occured!");
+        return false;
+      }
+    }
+  }, {
+    key: "render",
+    value: function render(values, element) {
+      var style = "";
+      var _iteratorNormalCompletion = true;
+      var _didIteratorError = false;
+      var _iteratorError = undefined;
+
+      try {
+        for (var _iterator = values[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+          var value = _step.value;
+          var result = 0;
+
+          if (value.type === "window") {
+            result = this.makeWindow(value.from, value.to);
+          } else if (value.type === "toTop") {
+            result = this.makeScroll(value.from, value.to, element.getClientRects()[0].top / window.innerHeight, element);
+          } else if (value.type === "toBottom") {
+            result = this.makeScroll(value.from, value.to, element.getClientRects()[0].bottom / window.innerHeight, element);
+          } else if (value.type === "mouseX") {
+            result = this.makeScroll(value.from, value.to, this.mouse.x, element);
+          } else if (value.type === "mouseY") {
+            result = this.makeScroll(value.from, value.to, this.mouse.y, element);
+          }
+
+          style += "--".concat(value.name, ": ").concat(result).concat(value.unit, ";");
+        }
+      } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+            _iterator["return"]();
+          }
+        } finally {
+          if (_didIteratorError) {
+            throw _iteratorError;
+          }
+        }
+      }
+
+      element.style = style;
+    }
+  }, {
+    key: "updateMouse",
+    value: function updateMouse(event) {
+      this.mouse = {
+        x: event.screenX / window.innerWidth,
+        y: event.screenY / window.innerHeight
+      };
     }
   }, {
     key: "mount",
     value: function mount() {
       var _this = this;
 
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      if ((typeof window === "undefined" ? "undefined" : _typeof(window)) !== "object") {
+        console.warn("This library works only in Client-Side Rendered JavaScripts.");
+      } else {
+        var _iteratorNormalCompletion2 = true;
+        var _didIteratorError2 = false;
+        var _iteratorError2 = undefined;
 
-      try {
-        var _loop = function _loop() {
-          var element = _step2.value;
-
-          if ((typeof window === "undefined" ? "undefined" : _typeof(window)) === "object") {
-            _this.makeMovement(element);
-
-            window.addEventListener("scroll", function (event) {
-              return _this.makeMovement(element);
-            });
-          } else {
-            console.warn("Window is not an object!");
-          }
-        };
-
-        for (var _iterator2 = this.state.data[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          _loop();
-        }
-      } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-      } finally {
         try {
-          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
-            _iterator2["return"]();
+          var _loop = function _loop() {
+            var data = _step2.value;
+
+            var element = _this.querySelector(data.selector);
+
+            _this.render(data.values, element);
+
+            window.addEventListener("scroll", function () {
+              _this.render(data.values, element);
+            });
+            window.addEventListener("mousemove", function (evt) {
+              _this.updateMouse(evt);
+
+              _this.render(data.values, element);
+            });
+          };
+
+          for (var _iterator2 = this.state.data[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+            _loop();
           }
+        } catch (err) {
+          _didIteratorError2 = true;
+          _iteratorError2 = err;
         } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
+          try {
+            if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+              _iterator2["return"]();
+            }
+          } finally {
+            if (_didIteratorError2) {
+              throw _iteratorError2;
+            }
           }
         }
       }
