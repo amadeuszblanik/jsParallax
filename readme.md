@@ -1,6 +1,6 @@
 # js-parallax
 ---
-0.2.0-pre2 (React-Ready)
+0.2.0 (React-Ready)
 
 Demo: https://blanik.me/projects/js-parallax
 
