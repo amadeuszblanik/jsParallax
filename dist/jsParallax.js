@@ -22,8 +22,10 @@ function () {
 
     _classCallCheck(this, JsParallax);
 
+    //@todo: Better React support
     this.state = {
       react: react,
+      //@todo: Better React support
       data: elements,
       decimals: decimals
     };
@@ -51,7 +53,6 @@ function () {
           console.error("Can't query selector \"".concat(selector, "\" in your document"));
           return false;
         } else {
-          console.log("!");
           return element;
         }
       } else if (_typeof(selector) === "object") {
@@ -74,13 +75,11 @@ function () {
                 });
                 return false;
               } else {
-                console.log("!!!");
                 return selector.current;
               }
             }
           }
         } else {
-          console.log("!!");
           return selector;
         }
 
@@ -202,10 +201,6 @@ function () {
         }
       }
 
-      console.log({
-        element: element
-      });
-
       if (element === false) {
         console.warn("Unexpected error has occurred");
         return false;
@@ -225,8 +220,6 @@ function () {
     key: "mount",
     value: function mount() {
       var _this = this;
-
-      console.log(this.state.data, this.state.react);
 
       if ((typeof window === "undefined" ? "undefined" : _typeof(window)) !== "object") {
         console.warn("This library works only in Client-Side Rendered JavaScripts.");

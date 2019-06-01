@@ -27,7 +27,6 @@ export default class JsParallax {
                 console.error(`Can't query selector "${selector}" in your document`);
                 return false;
             } else {
-                console.log("!");
                 return element;
             }
         } else if (typeof selector === "object") {
@@ -43,13 +42,11 @@ export default class JsParallax {
                             console.error("Provided element.current is not valid React element", {selector});
                             return false;
                         } else {
-                            console.log("!!!");
                             return selector.current;
                         }
                     }
                 }
             } else {
-                console.log("!!");
                 return selector;
             }
             console.error("Unexpected error has occured");
@@ -138,7 +135,6 @@ export default class JsParallax {
             }
             style += `--${value.name}: ${result}${value.unit};`;
         }
-        console.log({element});
         if(element === false) {
             console.warn("Unexpected error has occurred");
             return false;
@@ -155,7 +151,6 @@ export default class JsParallax {
     }
 
     mount() {
-        console.log(this.state.data, this.state.react);
         if (typeof window !== "object") {
             console.warn("This library works only in Client-Side Rendered JavaScripts.");
         } else {
