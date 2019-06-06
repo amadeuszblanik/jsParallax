@@ -38,7 +38,14 @@ function () {
   _createClass(JsParallax, [{
     key: "isInView",
     value: function isInView(selector) {
-      return selector.getBoundingClientRect().top <= window.innerHeight && selector.getBoundingClientRect().bottom >= 0;
+      if (typeof selector.getBoundingClientRect() !== "function") {
+        return selector.getBoundingClientRect().top <= window.innerHeight && selector.getBoundingClientRect().bottom >= 0;
+      } else {
+        console.error("getBountClientRect is not a function", {
+          selector: selector
+        });
+        return false;
+      }
     }
   }, {
     key: "querySelector",

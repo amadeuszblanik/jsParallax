@@ -14,7 +14,12 @@ export default class JsParallax {
     }
 
     isInView(selector) {
-        return selector.getBoundingClientRect().top <= window.innerHeight && selector.getBoundingClientRect().bottom >= 0;
+        if(typeof selector.getBoundingClientRect() !== "function") {
+            return selector.getBoundingClientRect().top <= window.innerHeight && selector.getBoundingClientRect().bottom >= 0;
+        } else {
+            console.error("getBountClientRect is not a function", {selector});
+            return false;
+        }
     }
 
     querySelector(selector) {
@@ -119,27 +124,32 @@ export default class JsParallax {
     }
 
     render(values, element) {
-        let style = ``;
-        for (let value of values) {
-            let result = 0;
-            if (value.type === "window") {
-                result = this.makeWindow(value.from, value.to);
-            } else if (value.type === "toTop") {
-                result = this.makeScroll(value.from, value.to, element.getClientRects()[0].top / window.innerHeight, element);
-            } else if (value.type === "toBottom") {
-                result = this.makeScroll(value.from, value.to, element.getClientRects()[0].bottom / window.innerHeight, element);
-            } else if (value.type === "mouseX") {
-                result = this.makeScroll(value.from, value.to, this.mouse.x, element);
-            } else if (value.type === "mouseY") {
-                result = this.makeScroll(value.from, value.to, this.mouse.y, element);
-            }
-            style += `--${value.name}: ${result}${value.unit};`;
-        }
-        if(element === false) {
-            console.warn("Unexpected error has occurred");
+        if (element === false) {
+            console.error("Element didn't exists!");
             return false;
         } else {
-            element.style = style;
+            let style = ``;
+            for (let value of values) {
+                let result = 0;
+                if (value.type === "window") {
+                    result = this.makeWindow(value.from, value.to);
+                } else if (value.type === "toTop") {
+                    result = this.makeScroll(value.from, value.to, element.getClientRects()[0].top / window.innerHeight, element);
+                } else if (value.type === "toBottom") {
+                    result = this.makeScroll(value.from, value.to, element.getClientRects()[0].bottom / window.innerHeight, element);
+                } else if (value.type === "mouseX") {
+                    result = this.makeScroll(value.from, value.to, this.mouse.x, element);
+                } else if (value.type === "mouseY") {
+                    result = this.makeScroll(value.from, value.to, this.mouse.y, element);
+                }
+                style += `--${value.name}: ${result}${value.unit};`;
+            }
+            if (element === false) {
+                console.warn("Unexpected error has occurred");
+                return false;
+            } else {
+                element.style = style;
+            }
         }
     }
 
